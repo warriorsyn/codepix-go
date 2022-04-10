@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"errors"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/warriorsyn/codepix-go/domain/model"
@@ -27,25 +26,22 @@ func (r PixKeyRepositoryDb) AddAccount(account *model.Account) error {
 	return nil
 }
 
-func (r *PixKeyRepositoryDb) RegisterKey(pixKey *model.PixKey) (*model.PixKey, error) {
+func (r PixKeyRepositoryDb) RegisterKey(pixKey *model.PixKey) (*model.PixKey, error) {
 	err := r.Db.Create(pixKey).Error
-
 	if err != nil {
 		return nil, err
 	}
-
 	return pixKey, nil
 }
 
-func (r *PixKeyRepositoryDb) FindKeyByKind(key, kind string) (*model.PixKey, error) {
-	var pixKey *model.PixKey
+func (r PixKeyRepositoryDb) FindKeyByKind(key string, kind string) (*model.PixKey, error) {
+	var pixKey model.PixKey
 	r.Db.Preload("Account.Bank").First(&pixKey, "kind = ? and key = ?", kind, key)
 
 	if pixKey.ID == "" {
-		return nil, errors.New("No key was found")
+		return nil, fmt.Errorf("no key was found")
 	}
-
-	return pixKey, nil
+	return &pixKey, nil
 }
 
 func (r PixKeyRepositoryDb) FindAccount(id string) (*model.Account, error) {

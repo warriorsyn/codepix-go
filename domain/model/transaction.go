@@ -3,7 +3,7 @@ package model
 import (
 	"errors"
 	"github.com/asaskevich/govalidator"
-	uuid "github.com/satori/go.uuid"
+	"github.com/satori/uuid.go"
 	"time"
 )
 
@@ -97,3 +97,4 @@ func NewTransaction(accountFrom *Account, amount float64, pixKeyTo *PixKey, desc
 		return nil, err
 	}
 	return &transaction, nil
+}
